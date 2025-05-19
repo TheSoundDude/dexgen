@@ -1,283 +1,428 @@
----
-layout: default
-title: Home
----
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dex Entry Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Google Fonts for a modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700;400&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            min-width: 100vw;
+            width: 100vw;
+            height: 100vh;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #111;
+            margin: 0;
+            padding: 0;
+            background:
+              repeating-linear-gradient(
+                135deg,
+                rgba(255,255,255,0.04) 0px, 
+                rgba(255,255,255,0.04) 12px, 
+                rgba(220,38,38,0.18) 12px, 
+                rgba(220,38,38,0.18) 24px
+              ),
+              linear-gradient(120deg, #e53935 0%, #b71c1c 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .pokedex-frame {
+            width: 700px;
+            max-width: 90vw;
+            height: 1400px;
+            max-height: 97vh;
+            min-width: 340px;
+            min-height: 500px;
+            border-radius: 50px 50px 65px 65px / 60px 60px 80px 80px;
+            background:
+                radial-gradient(circle at 110px 110px, #fff 0px, #f8bbd0 80px, rgba(255,255,255,0) 160px),
+                linear-gradient(120deg, #f44336 0%, #d32f2f 100%);
+            box-shadow:
+                0 0 0 18px #b71c1c,
+                0 12px 64px 0px #6d191988,
+                0 0 0 2.5px #fff inset;
+            border: 7px solid #222;
+            padding: 0;
+            overflow: hidden;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+        }
+        .pokedex-title {
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #111;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 36px;
+            margin-bottom: 16px;
+            text-align: center;
+            text-transform: uppercase;
+            z-index: 20;
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+        .pokedex-lens {
+            position: absolute;
+            top: 50px;
+            left: 52px;
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle at 26px 26px, #fff 28px, #2196f3 55px, #1565c0 90px);
+            border: 8px solid #1976d2;
+            border-radius: 50%;
+            box-shadow: 0 4px 18px 0 #1976d2cc, 0 0 0 13px #81d4fa66;
+            z-index: 2;
+        }
+        .pokedex-led-red {
+            position: absolute;
+            top: 105px;
+            left: 180px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #e57373 24px, #c62828 30px);
+            border: 4px solid #b71c1c;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-led-yellow {
+            position: absolute;
+            top: 105px;
+            left: 228px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #fff59d 24px, #fbc02d 30px);
+            border: 4px solid #bfa90c;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-led-green {
+            position: absolute;
+            top: 105px;
+            left: 276px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #a5d6a7 24px, #388e3c 30px);
+            border: 4px solid #2c7030;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-divider {
+            position: absolute;
+            left: 0;
+            top: 230px;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #fff 0 33%, #b71c1c 33% 67%, #fff 67% 100%);
+            z-index: 3;
+            opacity: 0.7;
+        }
+        .pokedex-screen {
+            position: absolute;
+            left: 53%;
+            top: 34%;
+            transform: translate(-50%, 0);
+            width: 62%;
+            max-width: 640px;
+            height: 60%;
+            min-height: 320px;
+            background: linear-gradient(180deg, #4fc3f7 0%, #0288d1 100%);
+            border-radius: 28px;
+            box-shadow: 0 4px 40px #0288d188, 0 0 0 8px #0288d1;
+            border: 6px solid #0288d1;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .screen-content {
+            width: 96%;
+            margin: 0 auto;
+            max-width: 600px;
+            background: none;
+            border-radius: 28px;
+            box-shadow: none;
+            padding: 2rem 0.8rem 1.2rem 0.8rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        /* Lowered and moved more to right */
+        .pokedex-buttons {
+            position: absolute;
+            right: 33px;   /* was 48px; moves further right */
+            bottom: 60px;  /* was top: 50% + translateY(-50%), now absolute lower */
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            z-index: 6;
+        }
+        .pokedex-button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 5px solid #555;
+            background: radial-gradient(circle at 18px 18px, #fff 14px, #e0e0e0 26px, #bdbdbd 54px);
+            box-shadow: 0 4px 10px #7778;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.8em;
+            font-weight: 500;
+            color: #222;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0.6em 0.7em;
+            border: 1px solid #bbb;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 1em;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus {
+            border-color: #1976d2;
+            outline: none;
+        }
+        .checkbox-group {
+            margin-bottom: 1.2em;
+        }
+        .checkbox-group label {
+            font-weight: 400;
+            color: #444;
+            margin-left: 0.5em;
+        }
+        .checkbox-wrap {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5em;
+        }
+        button {
+            width: 100%;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 0.95em 0;
+            font-size: 1.08rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(25,118,210,0.08);
+            letter-spacing: 0.5px;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            background: #1356a2;
+            box-shadow: 0 4px 16px rgba(25,118,210,0.13);
+        }
+        @media (max-width: 1200px) {
+            body {
+                justify-content: flex-start;
+            }
+            .pokedex-frame {
+                width: 95vw;
+                height: 180vw;
+                min-width: unset;
+                min-height: unset;
+            }
+            .pokedex-screen {
+                min-height: 230px;
+                width: 90%;
+                max-width: 97vw;
+                left: 53.5%;
+            }
+            .screen-content {
+                padding: 1.1rem 0.2rem 1rem 0.2rem;
+            }
+            .pokedex-title {
+                margin-top: 36px;
+            }
+        }
+        @media (max-width: 700px) {
+            .pokedex-frame {
+                width: 99vw;
+                height: 205vw;
+            }
+            .pokedex-lens {
+                top: 18px;
+                left: 18px;
+                width: 50px;
+                height: 50px;
+            }
+            .pokedex-led-red,
+            .pokedex-led-yellow,
+            .pokedex-led-green {
+                width: 16px; height: 16px;
+                top: 44px;
+            }
+            .pokedex-led-red { left: 88px; }
+            .pokedex-led-yellow { left: 112px; }
+            .pokedex-led-green { left: 136px; }
+            .pokedex-divider {
+                top: 90px;
+                height: 3px;
+            }
+            .pokedex-buttons {
+                right: 28px;
+                bottom: 18px;
+                gap: 8px;
+            }
+            .pokedex-button {
+                width: 22px;
+                height: 22px;
+            }
+        }
+        @media (max-width: 480px) {
+            .pokedex-frame {
+                width: 99vw;
+                height: 240vw;
+            }
+            .pokedex-screen {
+                min-height: 60px;
+                width: 97%;
+                left: 54%;
+                max-width: 99vw;
+            }
+            .screen-content {
+                padding: 0.25rem 0.1rem 0.6rem 0.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pokedex-frame">
+        <div class="pokedex-title">DEX ENTRY GENERATOR</div>
+        <div class="pokedex-lens"></div>
+        <div class="pokedex-led-red"></div>
+        <div class="pokedex-led-yellow"></div>
+        <div class="pokedex-led-green"></div>
+        <div class="pokedex-divider"></div>
+        <!-- Lower and more right: -->
+        <div class="pokedex-buttons">
+            <div class="pokedex-button"></div>
+            <div class="pokedex-button"></div>
+            <div class="pokedex-button"></div>
+        </div>
+        <div class="pokedex-screen">
+            <div class="screen-content">
+                <form id="dexForm">
+                    <label>
+                        Pokémon Name/ID
+                        <input type="text" id="pokemon_id" required placeholder="e.g. bulbasaur">
+                    </label>
+                    <label>
+                        Aspect
+                        <input type="text" id="aspect" required placeholder="e.g. shiny">
+                    </label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrap">
+                            <input type="checkbox" id="gmax">
+                            <label for="gmax">Add Gmax form</label>
+                        </div>
+                        <div class="checkbox-wrap">
+                            <input type="checkbox" id="mega">
+                            <label for="mega">Add Mega form</label>
+                        </div>
+                        <div class="checkbox-wrap">
+                            <input type="checkbox" id="megaxy">
+                            <label for="megaxy">Add Mega X and Mega Y forms</label>
+                        </div>
+                    </div>
+                    <button type="submit">Generate JSON</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Make Mega and Mega X/Y mutually exclusive
+        const mega = document.getElementById('mega');
+        const megaxy = document.getElementById('megaxy');
 
-<style>
-body, html {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  min-width: 100vw;
-  width: 100vw;
-  box-sizing: border-box;
-}
-.pokedex-home-bg {
-  min-height: 100vh;
-  min-width: 100vw;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background:
-    repeating-linear-gradient(
-      135deg,
-      rgba(255,255,255,0.04) 0px, 
-      rgba(255,255,255,0.04) 12px, 
-      rgba(220,38,38,0.18) 12px, 
-      rgba(220,38,38,0.18) 24px
-    ),
-    linear-gradient(120deg, #e53935 0%, #b71c1c 100%);
-}
-.pokedex-home-content {
-  width: 700px;
-  max-width: 90vw;
-  min-width: 340px;
-  min-height: 340px;
-  border-radius: 50px 50px 65px 65px / 60px 60px 80px 80px;
-  background:
-    radial-gradient(circle at 110px 110px, #fff 0px, #f8bbd0 80px, rgba(255,255,255,0) 160px),
-    linear-gradient(120deg, #f44336 0%, #d32f2f 100%);
-  box-shadow:
-    0 0 0 18px #b71c1c,
-    0 12px 64px 0px #6d191988,
-    0 0 0 2.5px #fff inset;
-  border: 7px solid #222;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  margin-bottom: 2em;
-  margin-top: 2em;
-  padding: 2em 1em 3em 1em;
-}
-.pokedex-smallbox {
-  position: absolute;
-  top: 23px;
-  left: 23px;
-  width: 110px;
-  height: 110px;
-  background: linear-gradient(120deg, #d32f2f 0%, #b71c1c 100%);
-  border-radius: 25px 18px 18px 18px / 28px 18px 18px 18px;
-  box-shadow: 0 2px 14px #a30a0a66;
-  border: 4px solid #891515;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  z-index: 20;
-}
-.pokedex-lens {
-  margin-top: 18px;
-  margin-bottom: 18px;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 14px 14px, #fff 14px, #2196f3 32px, #1565c0 46px);
-  border: 4px solid #1976d2;
-  box-shadow: 0 2px 8px 0 #1976d2cc, 0 0 0 7px #81d4fa66;
-  aspect-ratio: 1 / 1;
-  display: block;
-}
-.pokedex-smallbox .pokedex-lens {
-  margin-bottom: 18px;
-}
-.pokedex-leds {
-  margin-top: 0;
-  margin-bottom: 16px;
-  display: flex;
-  flex-direction: row;
-  gap: 10px;
-  justify-content: center;
-  width: 90%;
-}
-.pokedex-led {
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  border: 2px solid #333;
-  box-shadow: 0 1.5px 3px #fff7;
-}
-.pokedex-led.red {
-  background: radial-gradient(circle at 4px 4px, #fff 5px, #e57373 10px, #c62828 13px);
-  border-color: #b71c1c;
-}
-.pokedex-led.yellow {
-  background: radial-gradient(circle at 4px 4px, #fff 5px, #fff59d 10px, #fbc02d 13px);
-  border-color: #bfa90c;
-}
-.pokedex-led.green {
-  background: radial-gradient(circle at 4px 4px, #fff 5px, #a5d6a7 10px, #388e3c 13px);
-  border-color: #2c7030;
-}
-.pokedex-home-title {
-  font-size: 1.5em;
-  margin-bottom: 1.2em;
-  margin-top: 5.8em;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #111;
-  font-family: 'Roboto', Arial, sans-serif;
-  line-height: 1.2;
-}
-.pokedex-home-desc {
-  font-size: 1.25em;
-  text-align: center;
-  color: #222;
-  margin-bottom: 2.5em;
-  margin-top: 2.2em; /* Lowered the description */
-  white-space: pre-line;
-}
-.pokedex-nav-links {
-  display: flex;
-  gap: 2.5em;
-  justify-content: center;
-  margin-top: 4.5em; /* Lowered the nav links */
-}
-.pokedex-nav-links a {
-  background: #b71c1c;
-  color: #fff;
-  padding: 0.7em 1.8em;
-  border-radius: 18px;
-  font-weight: 700;
-  font-size: 1.06em;
-  text-decoration: none;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 10px #b71c1c22;
-  border: 2.2px solid #8d1818;
-  transition: background 0.15s, color 0.15s, transform 0.12s;
-  outline: none;
-}
-.pokedex-nav-links a:hover,
-.pokedex-nav-links a:focus {
-  background: #d32f2f;
-  color: #fff59d;
-  transform: translateY(-2px) scale(1.05);
-  outline: none;
-}
-.pokedex-buttons-right {
-  position: absolute;
-  right: 18px;
-  bottom: 50px;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 44px;
-}
-.pokedex-button {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  border: 5px solid #555;
-  background: radial-gradient(circle at 18px 18px, #fff 14px, #e0e0e0 26px, #bdbdbd 54px);
-  box-shadow: 0 4px 10px #7778;
-  margin-bottom: 0;
-}
-.divider-bar {
-  position: absolute;
-  left: 0;
-  top: 260px;
-  width: 100%;
-  height: 6px;
-  background: linear-gradient(90deg, #fff 0 33%, #b71c1c 33% 67%, #fff 67% 100%);
-  opacity: 0.7;
-}
-@media (max-width: 900px) {
-  .pokedex-home-content {
-    width: 95vw;
-    min-width: unset;
-  }
-  .pokedex-smallbox {
-    left: 10px;
-    top: 10px;
-  }
-  .pokedex-buttons-right {
-    right: 18px;
-  }
-}
-@media (max-width: 600px) {
-  .pokedex-home-content {
-    width: 99vw;
-    min-width: unset;
-    padding: 1em 0.4em 1.6em 0.4em;
-  }
-  .pokedex-home-title {
-    font-size: 1.1em;
-    margin-top: 3em;
-    margin-bottom: 1.1em;
-  }
-  .pokedex-home-desc {
-    font-size: 1.1em;
-    margin-bottom: 1.5em;
-    margin-top: 1.2em; /* Lowered for mobile as well */
-  }
-  .pokedex-smallbox {
-    width: 84px;
-    height: 84px;
-    border-radius: 19px 12px 12px 12px / 20px 12px 12px 12px;
-  }
-  .pokedex-lens {
-    width: 33px;
-    height: 33px;
-    margin-top: 12px;
-    margin-bottom: 12px;
-    aspect-ratio: 1 / 1;
-  }
-  .pokedex-led {
-    width: 8px;
-    height: 8px;
-    border-width: 1.3px;
-  }
-  .pokedex-nav-links {
-    flex-direction: column;
-    gap: 1.1em;
-    margin-top: 0.7em;
-  }
-  .pokedex-nav-links a {
-    width: 100%;
-    text-align: center;
-    font-size: 1em;
-    padding: 0.6em 1em;
-  }
-  .pokedex-buttons-right {
-    gap: 24px;
-    right: 8px;
-  }
-}
-</style>
+        mega.addEventListener('change', function() {
+            if (this.checked) {
+                megaxy.checked = false;
+                megaxy.disabled = true;
+            } else {
+                megaxy.disabled = false;
+            }
+        });
 
-<div class="pokedex-home-bg">
-  <div class="pokedex-home-content">
-    <div class="pokedex-smallbox">
-      <div class="pokedex-lens"></div>
-      <div class="pokedex-leds">
-        <div class="pokedex-led red"></div>
-        <div class="pokedex-led yellow"></div>
-        <div class="pokedex-led green"></div>
-      </div>
-    </div>
-    <h1 class="pokedex-home-title">
-      Welcome to the<br>
-      Cobblemon Tools!
-    </h1>
-    <p class="pokedex-home-desc">
-      Use the navigation below to access the<br>Dex Generator and Poser Generator.
-    </p>
-    <div class="pokedex-nav-links">
-      <a href="/dex/">Dex Generator</a>
-      <a href="/poser/">Poser Generator</a>
-    </div>
-    <!-- Pokédex Buttons, right side, absolute -->
-    <div class="pokedex-buttons-right">
-      <div class="pokedex-button"></div>
-      <div class="pokedex-button"></div>
-      <div class="pokedex-button"></div>
-    </div>
-    <!-- Divider bar -->
-    <div class="divider-bar"></div>
-  </div>
-</div>
+        megaxy.addEventListener('change', function() {
+            if (this.checked) {
+                mega.checked = false;
+                mega.disabled = true;
+            } else {
+                mega.disabled = false;
+            }
+        });
+
+        function makeDexEntry(pokemon_id, aspect, forms) {
+            const pokemon_id_aspect = `${pokemon_id}_${aspect}`;
+            return {
+                id: `cobblemon:${pokemon_id_aspect}`,
+                speciesId: `cobblemon:${pokemon_id}`,
+                displayAspects: [aspect],
+                conditionAspects: [aspect],
+                forms: forms,
+                variations: [
+                    {
+                        displayName: `${pokemon_id}_${aspect}`,
+                        aspects: [aspect]
+                    }
+                ]
+            };
+        }
+
+        document.getElementById('dexForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const pokemon_id = document.getElementById('pokemon_id').value.trim();
+            const aspect = document.getElementById('aspect').value.trim();
+            const forms = [
+                { displayForm: "Normal", unlockForms: ["Normal"] }
+            ];
+            if (document.getElementById('gmax').checked) {
+                forms.push({ displayForm: "Gmax", unlockForms: ["Gmax"] });
+            }
+
+            const megaChecked = document.getElementById('mega').checked;
+            const megaXYChecked = document.getElementById('megaxy').checked;
+
+            // If Mega X/Y is checked, add both Mega X and Mega Y, do not add Mega
+            if (megaXYChecked) {
+                forms.push({ displayForm: "Mega X", unlockForms: ["Mega X"] });
+                forms.push({ displayForm: "Mega Y", unlockForms: ["Mega Y"] });
+            } else if (megaChecked) {
+                forms.push({ displayForm: "Mega", unlockForms: ["Mega"] });
+            }
+
+            const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
+            const blob = new Blob([JSON.stringify(dexEntry, null, 4)], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${pokemon_id}_${aspect}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>
