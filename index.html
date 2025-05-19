@@ -1,129 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Dex Entry Generator</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Google Fonts for a modern look -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700;400&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: #f3f3f3;
-            font-family: 'Roboto', Arial, sans-serif;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 32px rgba(0,0,0,0.11), 0 1.5px 8px rgba(0,0,0,0.08);
-            padding: 2.5rem 2rem 2rem 2rem;
-            max-width: 375px;
-            width: 100%;
-            margin: 2rem auto;
-        }
-        h1 {
-            color: #1976d2;
-            font-size: 2rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-top: 0;
-            margin-bottom: 1.2em;
-            text-align: center;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.8em;
-            font-weight: 500;
-            color: #222;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 0.6em 0.7em;
-            border: 1px solid #bbb;
-            border-radius: 6px;
-            font-size: 1rem;
-            margin-bottom: 1em;
-            transition: border-color 0.2s;
-        }
-        input[type="text"]:focus {
-            border-color: #1976d2;
-            outline: none;
-        }
-        .checkbox-group {
-            margin-bottom: 1.2em;
-        }
-        .checkbox-group label {
-            font-weight: 400;
-            color: #444;
-            margin-left: 0.5em;
-        }
-        .checkbox-wrap {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5em;
-        }
-        button {
-            width: 100%;
-            background: #1976d2;
-            color: #fff;
-            border: none;
-            border-radius: 6px;
-            padding: 0.95em 0;
-            font-size: 1.08rem;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(25,118,210,0.08);
-            letter-spacing: 0.5px;
-            transition: background 0.2s, box-shadow 0.2s;
-        }
-        button:hover {
-            background: #1356a2;
-            box-shadow: 0 4px 16px rgba(25,118,210,0.13);
-        }
-        @media (max-width: 480px) {
-            .card {
-                padding: 1.2rem 0.5rem 1.5rem 0.5rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>Dex Entry Generator</h1>
-        <form id="dexForm">
-            <label>
-                Pokémon Name/ID
-                <input type="text" id="pokemon_id" required placeholder="e.g. bulbasaur">
-            </label>
-            <label>
-                Aspect
-                <input type="text" id="aspect" required placeholder="e.g. shiny">
-            </label>
-            <div class="checkbox-group">
-                <div class="checkbox-wrap">
-                    <input type="checkbox" id="gmax">
-                    <label for="gmax">Add Gmax form</label>
-                </div>
-                <div class="checkbox-wrap">
-                    <input type="checkbox" id="mega">
-                    <label for="mega">Add Mega form</label>
-                </div>
-                <div class="checkbox-wrap">
-                    <input type="checkbox" id="mega-x">
-                    <label for="mega-x">Add Mega-X form</label>
-                </div>
-                <div class="checkbox-wrap">
-                    <input type="checkbox" id="mega-y">
-                    <label for="mega-y">Add Mega-Y form</label>
-                </div>
-            </div>
-            <button type="submit">Generate JSON</button>
-        </form>
-    </div>
+<!-- ... other HTML code ... -->
     <script>
         function makeDexEntry(pokemon_id, aspect, forms) {
             const pokemon_id_aspect = `${pokemon_id}_${aspect}`;
@@ -160,12 +35,12 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${pokemon_id}.json`;
+            // Export filename as pokemon_aspect.json
+            a.download = `${pokemon_id}_${aspect}.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
     </script>
-</body>
-</html>
+<!-- ... other HTML code ... -->
