@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{% if page.title %}{{ page.title }}{% else %}Cobblemon Tools{% endif %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {% if site.stylesheet %}
+    <link rel="stylesheet" href="{{ site.stylesheet }}">
+  {% else %}
+    <link rel="stylesheet" href="/assets/main.css">
+  {% endif %}
+  {% if site.favicon %}
+    <link rel="icon" href="{{ site.favicon }}">
+  {% endif %}
+</head>
+<body>
+  <!-- Optional: Add site navigation here if needed -->
+  <main>
+    {{ content }}
+  </main>
+  <!-- Optional: Add a footer here if needed -->
+</body>
+</html>
