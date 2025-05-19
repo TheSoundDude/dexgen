@@ -110,13 +110,39 @@
                 </div>
                 <div class="checkbox-wrap">
                     <input type="checkbox" id="mega">
-                    <label for="mega">Add Mega form (includes Mega X and Mega Y)</label>
+                    <label for="mega">Add Mega form</label>
+                </div>
+                <div class="checkbox-wrap">
+                    <input type="checkbox" id="megaxy">
+                    <label for="megaxy">Add Mega X and Mega Y forms</label>
                 </div>
             </div>
             <button type="submit">Generate JSON</button>
         </form>
     </div>
     <script>
+        // Make Mega and Mega X/Y mutually exclusive
+        const mega = document.getElementById('mega');
+        const megaxy = document.getElementById('megaxy');
+
+        mega.addEventListener('change', function() {
+            if (this.checked) {
+                megaxy.checked = false;
+                megaxy.disabled = true;
+            } else {
+                megaxy.disabled = false;
+            }
+        });
+
+        megaxy.addEventListener('change', function() {
+            if (this.checked) {
+                mega.checked = false;
+                mega.disabled = true;
+            } else {
+                mega.disabled = false;
+            }
+        });
+
         function makeDexEntry(pokemon_id, aspect, forms) {
             const pokemon_id_aspect = `${pokemon_id}_${aspect}`;
             return {
@@ -144,11 +170,18 @@
             if (document.getElementById('gmax').checked) {
                 forms.push({ displayForm: "Gmax", unlockForms: ["Gmax"] });
             }
-            if (document.getElementById('mega').checked) {
-                forms.push({ displayForm: "Mega", unlockForms: ["Mega"] });
+
+            const megaChecked = document.getElementById('mega').checked;
+            const megaXYChecked = document.getElementById('megaxy').checked;
+
+            // If Mega X/Y is checked, add both Mega X and Mega Y, do not add Mega
+            if (megaXYChecked) {
                 forms.push({ displayForm: "Mega X", unlockForms: ["Mega X"] });
                 forms.push({ displayForm: "Mega Y", unlockForms: ["Mega Y"] });
+            } else if (megaChecked) {
+                forms.push({ displayForm: "Mega", unlockForms: ["Mega"] });
             }
+
             const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
             const blob = new Blob([JSON.stringify(dexEntry, null, 4)], {type: "application/json"});
             const url = URL.createObjectURL(blob);
