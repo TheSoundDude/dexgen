@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cobblemon Poser Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700;400&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            min-height: 100vh;
+            min-width: 100vw;
+            width: 100vw;
+            height: 100vh;
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #111;
+            margin: 0;
+            padding: 0;
+            background:
+              repeating-linear-gradient(
+                135deg,
+                rgba(255,255,255,0.04) 0px, 
+                rgba(255,255,255,0.04) 12px, 
+                rgba(220,38,38,0.18) 12px, 
+                rgba(220,38,38,0.18) 24px
+              ),
+              linear-gradient(120deg, #e53935 0%, #b71c1c 100%);
+            /* Use flexbox to center .pokedex-frame vertically and horizontally */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .pokedex-frame {
+            /* Centered with flexbox, no absolute positioning */
+            width: 700px; /* Reduced from 900px */
+            max-width: 90vw; /* Reduced from 97vw */
+            height: 1400px;
+            max-height: 97vh;
+            min-width: 340px;
+            min-height: 500px;
+            border-radius: 50px 50px 65px 65px / 60px 60px 80px 80px;
+            background:
+                radial-gradient(circle at 110px 110px, #fff 0px, #f8bbd0 80px, rgba(255,255,255,0) 160px),
+                linear-gradient(120deg, #f44336 0%, #d32f2f 100%);
+            box-shadow:
+                0 0 0 18px #b71c1c,
+                0 12px 64px 0px #6d191988,
+                0 0 0 2.5px #fff inset;
+            border: 7px solid #222;
+            padding: 0;
+            overflow: hidden;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        .pokedex-title {
+            font-family: 'Roboto', Arial, sans-serif;
+            color: #111;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-top: 36px;
+            margin-bottom: 16px;
+            text-align: center;
+            text-transform: uppercase;
+            z-index: 20;
+            position: relative;
+            display: block;
+            width: 100%;
+        }
+        .pokedex-lens {
+            position: absolute;
+            top: 50px;
+            left: 52px;
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle at 26px 26px, #fff 28px, #2196f3 55px, #1565c0 90px);
+            border: 8px solid #1976d2;
+            border-radius: 50%;
+            box-shadow: 0 4px 18px 0 #1976d2cc, 0 0 0 13px #81d4fa66;
+            z-index: 2;
+        }
+        .pokedex-led-red {
+            position: absolute;
+            top: 105px;
+            left: 180px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #e57373 24px, #c62828 30px);
+            border: 4px solid #b71c1c;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-led-yellow {
+            position: absolute;
+            top: 105px;
+            left: 228px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #fff59d 24px, #fbc02d 30px);
+            border: 4px solid #bfa90c;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-led-green {
+            position: absolute;
+            top: 105px;
+            left: 276px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #a5d6a7 24px, #388e3c 30px);
+            border: 4px solid #2c7030;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-divider {
+            position: absolute;
+            left: 0;
+            top: 230px;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #fff 0 33%, #b71c1c 33% 67%, #fff 67% 100%);
+            z-index: 3;
+            opacity: 0.7;
+        }
+        .pokedex-buttons {
+            position: absolute;
+            right: 48px;
+            bottom: 90px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            z-index: 6;
+        }
+        .pokedex-button {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 5px solid #555;
+            background: radial-gradient(circle at 18px 18px, #fff 14px, #e0e0e0 26px, #bdbdbd 54px);
+            box-shadow: 0 4px 10px #7778;
+        }
+        .pokedex-screen {
+            position: absolute;
+            left: 53%;
+            top: 34%;
+            transform: translate(-50%, 0);
+            width: 62%;
+            max-width: 640px;
+            height: 60%;
+            min-height: 320px;
+            background: linear-gradient(180deg, #4fc3f7 0%, #0288d1 100%);
+            border-radius: 28px;
+            box-shadow: 0 4px 40px #0288d188, 0 0 0 8px #0288d1;
+            border: 6px solid #0288d1;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .screen-content {
+            width: 96%;
+            margin: 0 auto;
+            max-width: 600px;
+            background: none;
+            border-radius: 28px;
+            box-shadow: none;
+            padding: 2rem 0.8rem 1.2rem 0.8rem;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.7em;
+            font-weight: 500;
+            color: #111;
+            font-size: 1.1rem;
+        }
+        form {
+            width: 100%;
+            max-width: 370px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        input, select {
+            width: 100%;
+            max-width: 360px;
+            padding: 0.6em 0.8em;
+            border: 2px solid #d32f2f;
+            border-radius: 7px;
+            font-size: 1rem;
+            margin-bottom: 1em;
+            background: rgba(255,255,255,0.8);
+            color: #111;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            border-color: #b71c1c;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            max-width: 360px;
+            background: #d32f2f;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 0.8em 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(211,47,47,0.08);
+            letter-spacing: 0.5px;
+            transition: background 0.2s, box-shadow 0.2s;
+            margin-top: 0.5em;
+            align-self: stretch;
+        }
+        button:hover {
+            background: #b71c1c;
+            box-shadow: 0 4px 16px rgba(211,47,47,0.13);
+        }
+        .desc, .auto-name {
+            display: none !important;
+        }
+        .animation-checkboxes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.7em 1.1em;
+            margin-bottom: 1em;
+        }
+        .animation-checkboxes label {
+            font-weight: 400;
+            color: #111;
+            margin-left: 0.3em;
+            margin-bottom: 0;
+            white-space: nowrap;
+            font-size: 1em;
+        }
+        .animation-checkbox-wrap {
+            display: flex;
+            align-items: center;
+        }
+        @media (max-width: 1200px) {
+            body {
+                justify-content: flex-start;
+            }
+            .pokedex-frame {
+                width: 95vw;
+                height: 180vw;
+                min-width: unset;
+                min-height: unset;
+            }
+            .pokedex-screen {
+                min-height: 230px;
+                width: 90%;
+                max-width: 97vw;
+                left: 53.5%;
+            }
+            .screen-content {
+                padding: 1.1rem 0.2rem 1rem 0.2rem;
+            }
+            .pokedex-title {
+                margin-top: 36px;
+            }
+        }
+        @media (max-width: 700px) {
+            .pokedex-frame {
+                width: 99vw;
+                height: 205vw;
+            }
+            .pokedex-lens {
+                top: 18px;
+                left: 18px;
+                width: 50px;
+                height: 50px;
+            }
+            .pokedex-led-red,
+            .pokedex-led-yellow,
+            .pokedex-led-green {
+                width: 16px; height: 16px;
+                top: 44px;
+            }
+            .pokedex-led-red { left: 88px; }
+            .pokedex-led-yellow { left: 112px; }
+            .pokedex-led-green { left: 136px; }
+            .pokedex-divider {
+                top: 90px;
+                height: 3px;
+            }
+            .pokedex-buttons {
+                right: 18px;
+                bottom: 20px;
+                gap: 8px;
+            }
+            .pokedex-button {
+                width: 22px;
+                height: 22px;
+            }
+            .pokedex-screen {
+                min-height: 90px;
+                width: 94%;
+                left: 53.5%;
+                max-width: 99vw;
+            }
+            .screen-content {
+                padding: 0.5rem 0.1rem 0.8rem 0.1rem;
+            }
+            form {
+                max-width: 98vw;
+            }
+            .pokedex-title {
+                margin-top: 18px;
+            }
+        }
+        @media (max-width: 480px) {
+            .pokedex-frame {
+                width: 99vw;
+                height: 240vw;
+            }
+            .pokedex-screen {
+                min-height: 60px;
+                width: 97%;
+                left: 54%;
+                max-width: 99vw;
+            }
+            .screen-content {
+                padding: 0.25rem 0.1rem 0.6rem 0.1rem;
+            }
+            .animation-checkboxes {
+                flex-direction: column;
+                gap: 0.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pokedex-frame">
+        <div class="pokedex-title">COBBLEMON POSER GENERATOR</div>
+        <div class="pokedex-lens"></div>
+        <div class="pokedex-led-red"></div>
+        <div class="pokedex-led-yellow"></div>
+        <div class="pokedex-led-green"></div>
+        <div class="pokedex-divider"></div>
+        <div class="pokedex-buttons">
+            <div class="pokedex-button"></div>
+            <div class="pokedex-button"></div>
+            <div class="pokedex-button"></div>
+        </div>
+        <div class="pokedex-screen">
+            <div class="screen-content">
+                <form id="poserForm">
+                    <label>
+                        Pokémon Species (ID)<br>
+                        <input type="text" id="species" required placeholder="e.g. bulbasaur">
+                    </label>
+                    <label>
+                        Aspect<br>
+                        <input type="text" id="aspect" placeholder="e.g. shiny (optional)">
+                    </label>
+                    <label>
+                        Animation Type(s)<br>
+                        <div class="animation-checkboxes" id="animationCheckboxes">
+                            <div class="animation-checkbox-wrap">
+                                <input type="checkbox" id="anim_idle" name="animation_type" value="idle">
+                                <label for="anim_idle">idle</label>
+                            </div>
+                            <div class="animation-checkbox-wrap">
+                                <input type="checkbox" id="anim_walk" name="animation_type" value="walk">
+                                <label for="anim_walk">walk</label>
+                            </div>
+                            <div class="animation-checkbox-wrap">
+                                <input type="checkbox" id="anim_run" name="animation_type" value="run">
+                                <label for="anim_run">run</label>
+                            </div>
+                            <div class="animation-checkbox-wrap">
+                                <input type="checkbox" id="anim_sleep" name="animation_type" value="sleep">
+                                <label for="anim_sleep">sleep</label>
+                            </div>
+                            <div class="animation-checkbox-wrap">
+                                <input type="checkbox" id="anim_swim" name="animation_type" value="swim">
+                                <label for="anim_swim">swim</label>
+                            </div>
+                            <div class="animation-checkbox-wrap">
+                                <input type="checkbox" id="anim_fly" name="animation_type" value="fly">
+                                <label for="anim_fly">fly</label>
+                            </div>
+                            <div class="animation-checkbox-wrap">
+                                <input type="checkbox" id="anim_attack" name="animation_type" value="attack">
+                                <label for="anim_attack">attack</label>
+                            </div>
+                            <div class="animation-checkbox-wrap">
+                                <input type="checkbox" id="anim_custom" name="animation_type" value="custom">
+                                <label for="anim_custom">custom</label>
+                            </div>
+                        </div>
+                    </label>
+                    <button type="submit">Generate Poser JSON</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function getAutoPoserName() {
+            const species = document.getElementById('species').value.trim();
+            const aspect = document.getElementById('aspect').value.trim();
+            if (!species && !aspect) return "_.json";
+            if (species && !aspect) return `${species}.json`;
+            if (!species && aspect) return `_${aspect}.json`;
+            return `${species}_${aspect}.json`;
+        }
+
+        document.getElementById('poserForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const species = document.getElementById('species').value.trim();
+            const aspect = document.getElementById('aspect').value.trim();
+            const poserName = species && aspect ? `${species}_${aspect}` :
+                              species ? species : aspect ? aspect : '';
+            const filename = getAutoPoserName();
+
+            const checkedBoxes = document.querySelectorAll('input[name="animation_type"]:checked');
+            const selectedAnimations = Array.from(checkedBoxes).map(cb => cb.value);
+
+            if (!species) {
+                alert("Please enter a Pokémon Species (ID).");
+                return;
+            }
+            if (selectedAnimations.length === 0) {
+                alert("Please select at least one animation type.");
+                return;
+            }
+
+            const posers = selectedAnimations.map(animationType => {
+                const poser = {
+                    name: poserName,
+                    animation: animationType,
+                    species: `cobblemon:${species}`
+                };
+                if (aspect) {
+                    poser.aspect = aspect;
+                }
+                return poser;
+            });
+
+            const output = (posers.length === 1) ? posers[0] : posers;
+
+            const blob = new Blob([JSON.stringify(output, null, 4)], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+    </script>
+</body>
+</html>
