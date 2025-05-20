@@ -384,6 +384,8 @@
         });
 
         function makeDexEntry(pokemon_id, aspect, forms) {
+            // Force pokemon_id to lowercase
+            pokemon_id = pokemon_id.toLowerCase();
             const pokemon_id_aspect = `${pokemon_id}_${aspect}`;
             return {
                 id: `cobblemon:${pokemon_id_aspect}`,
@@ -401,10 +403,10 @@
         }
 
         function parsePokemonIds(input) {
-            // Split by line breaks and commas, trim, and filter out empty strings
+            // Split by line breaks and commas, trim, force lowercase, and filter out empty strings
             return input
                 .split(/[\n,]+/)
-                .map(s => s.trim())
+                .map(s => s.trim().toLowerCase())
                 .filter(Boolean);
         }
 
