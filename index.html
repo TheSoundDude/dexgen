@@ -410,6 +410,18 @@
                 .filter(Boolean);
         }
 
+        // Enforce lowercase in the textarea as user types/pastes
+        document.addEventListener('DOMContentLoaded', function() {
+            const pokemonTextarea = document.getElementById('pokemon_ids');
+            pokemonTextarea.addEventListener('input', function() {
+                // Preserve caret position when changing value
+                const start = this.selectionStart;
+                const end = this.selectionEnd;
+                this.value = this.value.toLowerCase();
+                this.setSelectionRange(start, end);
+            });
+        });
+
         // Load JSZip library dynamically if needed
         function loadJSZip(callback) {
             if (window.JSZip) {
@@ -456,14 +468,16 @@
                     const zip = new JSZip();
                     pokemonIds.forEach(pokemon_id => {
                         const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
-                        zip.file(`${pokemon_id}_${aspect}.json`, JSON.stringify(dexEntry, null, 4));
+                        // Make sure filename is all lowercase
+                        const filename = `${pokemon_id}_${aspect}`.toLowerCase() + `.json`;
+                        zip.file(filename, JSON.stringify(dexEntry, null, 4));
                     });
                     zip.generateAsync({type:"blob"})
                         .then(function(content) {
                             const url = URL.createObjectURL(content);
                             const a = document.createElement('a');
                             a.href = url;
-                            a.download = `dex_entries_${aspect}.zip`;
+                            a.download = `dex_entries_${aspect.toLowerCase()}.zip`;
                             document.body.appendChild(a);
                             a.click();
                             document.body.removeChild(a);
@@ -473,11 +487,13 @@
             } else {
                 pokemonIds.forEach(pokemon_id => {
                     const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
+                    // Make sure filename is all lowercase
+                    const filename = `${pokemon_id}_${aspect}`.toLowerCase() + `.json`;
                     const blob = new Blob([JSON.stringify(dexEntry, null, 4)], {type: "application/json"});
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = `${pokemon_id}_${aspect}.json`;
+                    a.download = filename;
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
