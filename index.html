@@ -4,25 +4,309 @@
     <meta charset="UTF-8">
     <title>Dex Entry Generator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Google Fonts for a modern look -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700;400&display=swap" rel="stylesheet">
+    <!-- Computerized font (VT323) and fallback to monospace -->
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
-        /* ... (all your existing CSS, unmodified) ... */
-        /* Only change below if you want to adjust the textarea size */
-        textarea {
-            width: 100%;
-            padding: 0.6em 0.7em;
-            border: 1px solid #bbb;
-            border-radius: 6px;
-            font-size: 1rem;
-            margin-bottom: 1em;
-            min-height: 64px;
-            resize: vertical;
-            font-family: 'Roboto', Arial, sans-serif;
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
         }
-        textarea:focus {
-            border-color: #1976d2;
-            outline: none;
+        body {
+            min-height: 100vh;
+            min-width: 100vw;
+            width: 100vw;
+            height: 100vh;
+            font-family: 'VT323', 'Roboto Mono', 'Fira Mono', 'Consolas', 'Liberation Mono', monospace;
+            color: #111;
+            margin: 0;
+            padding: 0;
+            background:
+              repeating-linear-gradient(
+                135deg,
+                rgba(255,255,255,0.04) 0px, 
+                rgba(255,255,255,0.04) 12px, 
+                rgba(220,38,38,0.18) 12px, 
+                rgba(220,38,38,0.18) 24px
+              ),
+              linear-gradient(120deg, #e53935 0%, #b71c1c 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .pokedex-frame {
+            width: 700px;
+            max-width: 90vw;
+            height: 1400px;
+            max-height: 97vh;
+            min-width: 340px;
+            min-height: 500px;
+            border-radius: 50px 50px 65px 65px / 60px 60px 80px 80px;
+            background:
+                radial-gradient(circle at 110px 110px, #fff 0px, #f8bbd0 80px, rgba(255,255,255,0) 160px),
+                linear-gradient(120deg, #f44336 0%, #d32f2f 100%);
+            box-shadow:
+                0 0 0 18px #b71c1c,
+                0 12px 64px 0px #6d191988,
+                0 0 0 2.5px #fff inset;
+            border: 7px solid #222;
+            padding: 0;
+            overflow: hidden;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
+        }
+        .pokedex-title {
+            font-family: 'VT323', 'Roboto Mono', 'Fira Mono', 'Consolas', 'Liberation Mono', monospace;
+            color: #111;
+            font-size: 2.6rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-top: 36px;
+            margin-bottom: 16px;
+            text-align: center;
+            text-transform: uppercase;
+            z-index: 20;
+            position: relative;
+            display: block;
+            width: 100%;
+            text-shadow: 0 2px 2px #fff8, 0 0 3px #3332;
+        }
+        .pokedex-lens {
+            position: absolute;
+            top: 50px;
+            left: 52px;
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle at 26px 26px, #fff 28px, #2196f3 55px, #1565c0 90px);
+            border: 8px solid #1976d2;
+            border-radius: 50%;
+            box-shadow: 0 4px 18px 0 #1976d2cc, 0 0 0 13px #81d4fa66;
+            z-index: 2;
+        }
+        .pokedex-led-red {
+            position: absolute;
+            top: 105px;
+            left: 180px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #e57373 24px, #c62828 30px);
+            border: 4px solid #b71c1c;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-led-yellow {
+            position: absolute;
+            top: 105px;
+            left: 228px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #fff59d 24px, #fbc02d 30px);
+            border: 4px solid #bfa90c;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-led-green {
+            position: absolute;
+            top: 105px;
+            left: 276px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #a5d6a7 24px, #388e3c 30px);
+            border: 4px solid #2c7030;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 2;
+        }
+        .pokedex-divider {
+            position: absolute;
+            left: 0;
+            top: 230px;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #fff 0 33%, #b71c1c 33% 67%, #fff 67% 100%);
+            z-index: 3;
+            opacity: 0.7;
+        }
+        .pokedex-screen {
+            position: absolute;
+            left: 53%;
+            top: 40.5%;
+            transform: translate(-50%, 0);
+            width: 80%;
+            max-width: 600px;
+            height: 50%;
+            min-height: 220px;
+            background: linear-gradient(180deg, #4fc3f7 0%, #0288d1 100%);
+            border-radius: 28px;
+            box-shadow: 0 4px 40px #0288d188, 0 0 0 8px #0288d1;
+            border: 6px solid #0288d1;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen-content {
+            width: 98%;
+            height: 98%;
+            margin: 0 auto;
+            max-width: 570px;
+            max-height: 100%;
+            background: none;
+            border-radius: 28px;
+            box-shadow: none;
+            padding: 0;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        #dexForm {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 100%;
+            gap: 0.3em;
+            text-align: center;
+        }
+        #dexForm label {
+            margin-bottom: 0.3em;
+            margin-top: 0.1em;
+            font-size: 1.13rem;
+            width: 100%;
+            text-align: center;
+        }
+        #dexForm textarea,
+        #dexForm input[type="text"] {
+            margin-bottom: 0.18em;
+            margin-top: 0.05em;
+            font-size: 1.08rem;
+            min-height: 1.7em;
+            text-align: center;
+            display: block;
+        }
+        #dexForm textarea {
+            min-height: 2.1em;
+            max-height: 4.2em;
+            resize: vertical;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        #aspect {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+        .forms-title {
+            font-size: 1.17rem;
+            font-family: 'VT323', 'Roboto Mono', 'Fira Mono', 'Consolas', 'Liberation Mono', monospace;
+            font-weight: bold;
+            margin-bottom: 0.2em;
+            margin-top: 0.35em;
+            letter-spacing: 1px;
+            text-align: center;
+            width: 100%;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 1.1em;
+            margin-bottom: 0.3em;
+            margin-top: 0.1em;
+            width: 100%;
+        }
+        .checkbox-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.15em;
+            margin-bottom: 0;
+            font-size: 1.02rem;
+            text-align: center;
+        }
+        .checkbox-inline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.6em;
+            margin-top: 0.1em;
+            font-size: 1.02rem;
+            text-align: center;
+            width: 100%;
+            gap: 0;
+        }
+        .checkbox-inline-inner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35em;
+            margin: 0 auto;
+        }
+        #zip_export {
+            margin: 0 0.25em 0 0;
+            vertical-align: middle;
+            position: relative;
+            top: 0.06em;
+        }
+        button[type="submit"] {
+            margin-top: 0.25em;
+            margin-bottom: 0.1em;
+            align-self: center;
+            width: 80%;
+            text-align: center;
+            display: block;
+        }
+        @media (max-width: 1200px) {
+            .pokedex-screen {
+                min-height: 160px;
+                width: 97%;
+                max-width: 99vw;
+                left: 53.5%;
+                top: 35.5%;
+                height: 34%;
+            }
+            .screen-content {
+                max-width: 99vw;
+            }
+        }
+        @media (max-width: 700px) {
+            .pokedex-screen {
+                min-height: 85px;
+                width: 99%;
+                left: 54%;
+                max-width: 99vw;
+                height: 44vw;
+                top: 34.5%;
+            }
+            .screen-content {
+                max-width: 99vw;
+            }
+        }
+        @media (max-width: 480px) {
+            .pokedex-screen {
+                min-height: 60px;
+                width: 99%;
+                left: 54%;
+                max-width: 99vw;
+                height: 48vw;
+                top: 32%;
+            }
+            .screen-content {
+                padding: 0.15rem 0.1rem 0.35rem 0.1rem;
+            }
         }
     </style>
 </head>
@@ -41,7 +325,7 @@
         </div>
         <div class="pokedex-screen">
             <div class="screen-content">
-                <form id="dexForm">
+                <form id="dexForm" autocomplete="off">
                     <label>
                         Pokémon Name/ID(s)
                         <textarea id="pokemon_ids" required placeholder="e.g. bulbasaur, charmander, squirtle&#10;or one per line"></textarea>
@@ -50,19 +334,26 @@
                         Aspect
                         <input type="text" id="aspect" required placeholder="e.g. shiny">
                     </label>
+                    <div class="forms-title">Forms</div>
                     <div class="checkbox-group">
                         <div class="checkbox-wrap">
                             <input type="checkbox" id="gmax">
-                            <label for="gmax">Add Gmax form</label>
+                            <label for="gmax">Gmax</label>
                         </div>
                         <div class="checkbox-wrap">
                             <input type="checkbox" id="mega">
-                            <label for="mega">Add Mega form</label>
+                            <label for="mega">Mega</label>
                         </div>
                         <div class="checkbox-wrap">
                             <input type="checkbox" id="megaxy">
-                            <label for="megaxy">Add Mega X and Mega Y forms</label>
+                            <label for="megaxy">Mega X/Y</label>
                         </div>
+                    </div>
+                    <div class="checkbox-inline">
+                        <span class="checkbox-inline-inner">
+                            <input type="checkbox" id="zip_export" />
+                            <label for="zip_export" style="margin: 0;">Export as ZIP</label>
+                        </span>
                     </div>
                     <button type="submit">Generate JSON(s)</button>
                 </form>
@@ -110,17 +401,30 @@
         }
 
         function parsePokemonIds(input) {
-            // Split by commas or newlines, trim whitespace, remove empty
+            // Split by line breaks and commas, trim, and filter out empty strings
             return input
                 .split(/[\n,]+/)
                 .map(s => s.trim())
                 .filter(Boolean);
         }
 
+        // Load JSZip library dynamically if needed
+        function loadJSZip(callback) {
+            if (window.JSZip) {
+                callback();
+                return;
+            }
+            var script = document.createElement('script');
+            script.src = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
+            script.onload = callback;
+            document.head.appendChild(script);
+        }
+
         document.getElementById('dexForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const pokemon_ids_input = document.getElementById('pokemon_ids').value;
             const aspect = document.getElementById('aspect').value.trim();
+            const asZip = document.getElementById('zip_export').checked;
             const forms = [
                 { displayForm: "Normal", unlockForms: ["Normal"] }
             ];
@@ -145,18 +449,39 @@
                 return;
             }
 
-            pokemonIds.forEach(pokemon_id => {
-                const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
-                const blob = new Blob([JSON.stringify(dexEntry, null, 4)], {type: "application/json"});
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `${pokemon_id}_${aspect}.json`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                URL.revokeObjectURL(url);
-            });
+            if (asZip) {
+                loadJSZip(function() {
+                    const zip = new JSZip();
+                    pokemonIds.forEach(pokemon_id => {
+                        const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
+                        zip.file(`${pokemon_id}_${aspect}.json`, JSON.stringify(dexEntry, null, 4));
+                    });
+                    zip.generateAsync({type:"blob"})
+                        .then(function(content) {
+                            const url = URL.createObjectURL(content);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `dex_entries_${aspect}.zip`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        });
+                });
+            } else {
+                pokemonIds.forEach(pokemon_id => {
+                    const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
+                    const blob = new Blob([JSON.stringify(dexEntry, null, 4)], {type: "application/json"});
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${pokemon_id}_${aspect}.json`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                });
+            }
         });
     </script>
 </body>
