@@ -2,42 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dex Entry Generator</title>
+    <title>Dex Generator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Computerized font (VT323) and fallback to monospace -->
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-            padding: 0;
-        }
+        html, body { height: 100%; margin: 0; padding: 0; }
         body {
-            min-height: 100vh;
-            min-width: 100vw;
-            width: 100vw;
-            height: 100vh;
+            min-height: 100vh; min-width: 100vw; width: 100vw; height: 100vh;
             font-family: 'VT323', 'Roboto Mono', 'Fira Mono', 'Consolas', 'Liberation Mono', monospace;
-            color: #111;
-            margin: 0;
-            padding: 0;
+            color: #111; margin: 0; padding: 0;
             background:
-              repeating-linear-gradient(
-                135deg,
-                rgba(255,255,255,0.04) 0px, 
-                rgba(255,255,255,0.04) 12px, 
-                rgba(220,38,38,0.18) 12px, 
-                rgba(220,38,38,0.18) 24px
-              ),
+              repeating-linear-gradient(135deg, rgba(255,255,255,0.04) 0px, rgba(255,255,255,0.04) 12px, rgba(220,38,38,0.18) 12px, rgba(220,38,38,0.18) 24px),
               linear-gradient(120deg, #e53935 0%, #b71c1c 100%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
         .pokedex-frame {
-            width: 700px;
-            max-width: 90vw;
+            width: 1800px;
+            max-width: 96vw;
             height: 1400px;
             max-height: 97vh;
             min-width: 340px;
@@ -46,19 +27,57 @@
             background:
                 radial-gradient(circle at 110px 110px, #fff 0px, #f8bbd0 80px, rgba(255,255,255,0) 160px),
                 linear-gradient(120deg, #f44336 0%, #d32f2f 100%);
-            box-shadow:
-                0 0 0 18px #b71c1c,
-                0 12px 64px 0px #6d191988,
-                0 0 0 2.5px #fff inset;
-            border: 7px solid #222;
-            padding: 0;
-            overflow: hidden;
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            position: relative;
+            box-shadow: 0 0 0 18px #b71c1c, 0 12px 64px 0px #6d191988, 0 0 0 2.5px #fff inset;
+            border: 7px solid #222; padding: 0; overflow: hidden; z-index: 1;
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start; position: relative;
+        }
+        .pokedex-lens {
+            position: absolute;
+            top: 50px;
+            left: 52px;
+            width: 90px;
+            height: 90px;
+            background: radial-gradient(circle at 26px 26px, #fff 28px, #2196f3 55px, #1565c0 90px);
+            border: 8px solid #1976d2;
+            border-radius: 50%;
+            box-shadow: 0 4px 18px 0 #1976d2cc, 0 0 0 13px #81d4fa66;
+            z-index: 10;
+        }
+        .pokedex-led-red {
+            position: absolute;
+            top: 105px;
+            left: 180px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #e57373 24px, #c62828 30px);
+            border: 4px solid #b71c1c;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 10;
+        }
+        .pokedex-led-yellow {
+            position: absolute;
+            top: 105px;
+            left: 228px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #fff59d 24px, #fbc02d 30px);
+            border: 4px solid #bfa90c;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 10;
+        }
+        .pokedex-led-green {
+            position: absolute;
+            top: 105px;
+            left: 276px;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 10px 10px, #fff 13px, #a5d6a7 24px, #388e3c 30px);
+            border: 4px solid #2c7030;
+            border-radius: 50%;
+            box-shadow: 0 3px 6px #fff;
+            z-index: 10;
         }
         .pokedex-title {
             font-family: 'VT323', 'Roboto Mono', 'Fira Mono', 'Consolas', 'Liberation Mono', monospace;
@@ -76,88 +95,44 @@
             width: 100%;
             text-shadow: 0 2px 2px #fff8, 0 0 3px #3332;
         }
-        .pokedex-lens {
-            position: absolute;
-            top: 50px;
-            left: 52px;
-            width: 90px;
-            height: 90px;
-            background: radial-gradient(circle at 26px 26px, #fff 28px, #2196f3 55px, #1565c0 90px);
-            border: 8px solid #1976d2;
-            border-radius: 50%;
-            box-shadow: 0 4px 18px 0 #1976d2cc, 0 0 0 13px #81d4fa66;
-            z-index: 2;
-        }
-        .pokedex-led-red {
-            position: absolute;
-            top: 105px;
-            left: 180px;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle at 10px 10px, #fff 13px, #e57373 24px, #c62828 30px);
-            border: 4px solid #b71c1c;
-            border-radius: 50%;
-            box-shadow: 0 3px 6px #fff;
-            z-index: 2;
-        }
-        .pokedex-led-yellow {
-            position: absolute;
-            top: 105px;
-            left: 228px;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle at 10px 10px, #fff 13px, #fff59d 24px, #fbc02d 30px);
-            border: 4px solid #bfa90c;
-            border-radius: 50%;
-            box-shadow: 0 3px 6px #fff;
-            z-index: 2;
-        }
-        .pokedex-led-green {
-            position: absolute;
-            top: 105px;
-            left: 276px;
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle at 10px 10px, #fff 13px, #a5d6a7 24px, #388e3c 30px);
-            border: 4px solid #2c7030;
-            border-radius: 50%;
-            box-shadow: 0 3px 6px #fff;
-            z-index: 2;
-        }
-        .pokedex-divider {
-            position: absolute;
-            left: 0;
-            top: 230px;
+        .entry-generator-label,
+        .dex-file-generator-label,
+        .simple-dex-generator-label {
+            font-family: 'VT323', 'Roboto Mono', 'Fira Mono', 'Consolas', 'Liberation Mono', monospace;
+            color: #111;
+            font-size: 1.9rem;
+            letter-spacing: 2px;
+            font-weight: bold;
+            margin-bottom: 2px;
+            margin-top: 8px;
+            text-align: center;
+            text-transform: uppercase;
             width: 100%;
-            height: 6px;
-            background: linear-gradient(90deg, #fff 0 33%, #b71c1c 33% 67%, #fff 67% 100%);
-            z-index: 3;
-            opacity: 0.7;
+            display: block;
         }
+        .pokedex-divider { position: absolute; left: 0; top: 230px; width: 100%; height: 6px; background: linear-gradient(90deg, #fff 0 33%, #b71c1c 33% 67%, #fff 67% 100%); z-index: 3; opacity: 0.7; }
         .pokedex-screen {
             position: absolute;
-            left: 53%;
-            top: 40.5%;
+            left: 50%;
+            top: 34.5%;
             transform: translate(-50%, 0);
-            width: 80%;
-            max-width: 600px;
-            height: 50%;
-            min-height: 220px;
+            width: 88%;
+            max-width: 1600px;
+            min-width: 320px;
+            height: calc(90% - 260px);
+            min-height: 0;
             background: linear-gradient(180deg, #4fc3f7 0%, #0288d1 100%);
             border-radius: 28px;
             box-shadow: 0 4px 40px #0288d188, 0 0 0 8px #0288d1;
             border: 6px solid #0288d1;
             z-index: 5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: stretch; justify-content: flex-start; overflow: hidden;
         }
-
         .screen-content {
-            width: 98%;
-            height: 98%;
-            margin: 0 auto;
-            max-width: 570px;
+            width: 100%;
+            height: auto;
+            margin: 0;
+            max-width: 100%;
             max-height: 100%;
             background: none;
             border-radius: 28px;
@@ -167,152 +142,77 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             text-align: center;
+            overflow-y: auto;
+            overflow-x: hidden;
         }
-        #dexForm {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            width: 100%;
-            gap: 0.3em;
-            text-align: center;
+        .generator-divider { margin: 1em 0; width: 100%; border-bottom: 2px dashed #d32f2f; opacity: 0.66; }
+        /* Make text input boxes 80% width of blue box and centered */
+        #dexForm, #dexListForm, #simpleDexForm {
+            display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+            width: 100%; gap: 0.2em; text-align: center; margin: 0; padding: 0 0.5em;
         }
-        #dexForm label {
-            margin-bottom: 0.3em;
-            margin-top: 0.1em;
-            font-size: 1.13rem;
-            width: 100%;
-            text-align: center;
+        #dexForm label, #dexListForm label, #simpleDexForm label {
+            margin-bottom: 0.1em; margin-top: 0.1em; font-size: 1.13rem; width: 100%; text-align: center;
         }
-        #dexForm textarea,
-        #dexForm input[type="text"] {
-            margin-bottom: 0.18em;
+        #dexForm textarea, #dexForm input[type="text"],
+        #dexListForm textarea, #dexListForm input[type="text"], #dexListForm input[type="number"],
+        #simpleDexForm textarea, #simpleDexForm input[type="text"] {
+            width: 80% !important;
+            min-width: 200px;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            box-sizing: border-box;
+            margin-bottom: 0.1em;
             margin-top: 0.05em;
             font-size: 1.08rem;
             min-height: 1.7em;
             text-align: center;
             display: block;
+            overflow-x: auto;
         }
-        #dexForm textarea {
-            min-height: 2.1em;
-            max-height: 4.2em;
-            resize: vertical;
-            margin-left: auto;
-            margin-right: auto;
+        #dexForm textarea, #dexListForm textarea, #simpleDexForm textarea {
+            min-height: 2.1em; max-height: 4.2em; resize: vertical; display: block;
+        }
+        #aspect, #dexListForm input[type="text"], #dexListForm input[type="number"], #simpleDexForm input[type="text"] {
             display: block;
         }
-        #aspect {
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
-        }
-        .forms-title {
-            font-size: 1.17rem;
-            font-family: 'VT323', 'Roboto Mono', 'Fira Mono', 'Consolas', 'Liberation Mono', monospace;
-            font-weight: bold;
-            margin-bottom: 0.2em;
-            margin-top: 0.35em;
-            letter-spacing: 1px;
-            text-align: center;
-            width: 100%;
-        }
-        .checkbox-group {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            gap: 1.1em;
-            margin-bottom: 0.3em;
-            margin-top: 0.1em;
-            width: 100%;
-        }
-        .checkbox-wrap {
-            display: flex;
-            align-items: center;
-            gap: 0.15em;
-            margin-bottom: 0;
-            font-size: 1.02rem;
-            text-align: center;
-        }
-        .checkbox-inline {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 0.6em;
-            margin-top: 0.1em;
-            font-size: 1.02rem;
-            text-align: center;
-            width: 100%;
-            gap: 0;
-        }
-        .checkbox-inline-inner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.35em;
-            margin: 0 auto;
-        }
-        #zip_export {
-            margin: 0 0.25em 0 0;
-            vertical-align: middle;
-            position: relative;
-            top: 0.06em;
-        }
+        .forms-title { font-size: 1.17rem; font-family: 'VT323', 'Roboto Mono', 'Fira Mono', 'Consolas', 'Liberation Mono', monospace; font-weight: bold; margin-bottom: 0.1em; margin-top: 0.2em; letter-spacing: 1px; text-align: center; width: 100%; }
+        .checkbox-group { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 1.1em; margin-bottom: 0.1em; margin-top: 0.1em; width: 100%; }
+        .checkbox-wrap { display: flex; align-items: center; gap: 0.15em; margin-bottom: 0; font-size: 1.02rem; text-align: center; }
+        .checkbox-inline { display: flex; align-items: center; justify-content: center; margin-bottom: 0.2em; margin-top: 0.1em; font-size: 1.02rem; text-align: center; width: 100%; gap: 0; }
+        .checkbox-inline-inner { display: flex; align-items: center; justify-content: center; gap: 0.35em; margin: 0 auto; }
+        #zip_export { margin: 0 0.25em 0 0; vertical-align: middle; position: relative; top: 0.06em; }
         button[type="submit"] {
-            margin-top: 0.25em;
-            margin-bottom: 0.1em;
-            align-self: center;
-            width: 80%;
-            text-align: center;
-            display: block;
+            margin-top: 0.15em; margin-bottom: 0.1em; align-self: center;
+            width: 16% !important; /* 20% of 80% (previous width) = 16% of blue box */
+            min-width: 60px;
+            text-align: center; display: block;
+            font-size: 1.15rem;
+        }
+        @media (max-width: 1800px) {
+            .pokedex-frame { width: 96vw; }
+            .pokedex-screen { width: 88vw; max-width: 99vw; }
         }
         @media (max-width: 1200px) {
-            .pokedex-screen {
-                min-height: 160px;
-                width: 97%;
-                max-width: 99vw;
-                left: 53.5%;
-                top: 35.5%;
-                height: 34%;
-            }
-            .screen-content {
-                max-width: 99vw;
-            }
+            .pokedex-screen { min-height: 0; width: 97vw; max-width: 99vw; left: 50%; top: 20.5%; height: auto; }
+            .screen-content { max-width: 99vw; }
         }
         @media (max-width: 700px) {
-            .pokedex-screen {
-                min-height: 85px;
-                width: 99%;
-                left: 54%;
-                max-width: 99vw;
-                height: 44vw;
-                top: 34.5%;
-            }
-            .screen-content {
-                max-width: 99vw;
-            }
+            .pokedex-screen { min-height: 0; width: 99vw; left: 50%; max-width: 99vw; height: auto; top: 10%; }
+            .screen-content { max-width: 99vw; }
         }
         @media (max-width: 480px) {
-            .pokedex-screen {
-                min-height: 60px;
-                width: 99%;
-                left: 54%;
-                max-width: 99vw;
-                height: 48vw;
-                top: 32%;
-            }
-            .screen-content {
-                padding: 0.15rem 0.1rem 0.35rem 0.1rem;
-            }
+            .pokedex-screen { min-height: 0; width: 99vw; left: 50%; max-width: 99vw; height: auto; top: 7%; }
+            .screen-content { padding: 0.15rem 0.1rem 0.35rem 0.1rem; }
         }
     </style>
 </head>
 <body>
     <div class="pokedex-frame">
-        <div class="pokedex-title">DEX ENTRY GENERATOR</div>
+        <div class="pokedex-title">DEX GENERATOR</div>
         <div class="pokedex-lens"></div>
         <div class="pokedex-led-red"></div>
         <div class="pokedex-led-yellow"></div>
@@ -325,6 +225,9 @@
         </div>
         <div class="pokedex-screen">
             <div class="screen-content">
+                <!-- ENTRY GENERATOR label above first generator -->
+                <span class="entry-generator-label">ENTRY GENERATOR</span>
+                <!-- DEX ENTRY GENERATOR (existing) -->
                 <form id="dexForm" autocomplete="off">
                     <label>
                         Pokémon Name/ID(s)
@@ -357,6 +260,63 @@
                     </div>
                     <button type="submit">Generate JSON(s)</button>
                 </form>
+                <!-- Divider for visual separation -->
+                <div class="generator-divider"></div>
+                <!-- DEX FILE GENERATOR (new) -->
+                <span class="dex-file-generator-label">DEX FILE GENERATOR</span>
+                <form id="dexListForm" autocomplete="off">
+                    <!-- <div class="forms-title">Dex File Generator</div> -->
+                    <label>
+                        Dex ID (namespace:id)
+                        <input type="text" id="dex_id" required placeholder="e.g. cobblemon:regionaldex">
+                    </label>
+                    <label>
+                        Sort Order
+                        <input type="number" id="dex_sort_order" required placeholder="e.g. 12" min="0">
+                    </label>
+                    <label>
+                        Pokémon Names/IDs
+                        <textarea id="dex_entries" required placeholder="e.g. bulbasaur, charmander, squirtle&#10;or one per line"></textarea>
+                    </label>
+                    <label>
+                        <input type="radio" name="aspect_mode" id="aspect_single_radio" value="single" checked>
+                        Single Aspect for All (<span style="font-family:monospace;">e.g. pinkan</span>)
+                    </label>
+                    <label>
+                        <input type="radio" name="aspect_mode" id="aspect_multi_radio" value="multi">
+                        Each Pokémon Has Its Own Aspect (<span style="font-family:monospace;">e.g. bulbasaur,skeletal</span>)
+                    </label>
+                    <div id="aspect_single_group">
+                        <label>
+                            Aspect (will be appended to all Pokémon, e.g. "pinkan")
+                            <input type="text" id="dex_aspect" placeholder="e.g. pinkan">
+                        </label>
+                    </div>
+                    <div id="aspect_multi_group" style="display:none;">
+                        <label>
+                            Pokémon/Aspect pairs (comma-separated, one per line, e.g.:<br>
+                            bulbasaur,skeletal<br>
+                            charmander,pumpkin<br>
+                            etc.)
+                        </label>
+                    </div>
+                    <button type="submit">Export Dex File</button>
+                </form>
+                <!-- Divider for visual separation -->
+                <div class="generator-divider"></div>
+                <!-- SIMPLE DEX GENERATOR (new 3rd generator) -->
+                <span class="simple-dex-generator-label">SIMPLE DEX GENERATOR</span>
+                <form id="simpleDexForm" autocomplete="off">
+                    <label>
+                        Dex ID (namespace:id)
+                        <input type="text" id="simple_dex_id" required placeholder="e.g. cobblemon:pinkan">
+                    </label>
+                    <label>
+                        Entry (namespace:id)
+                        <input type="text" id="simple_dex_entry" required placeholder="e.g. frontier:pinkan">
+                    </label>
+                    <button type="submit">Export Simple Dex</button>
+                </form>
             </div>
         </div>
     </div>
@@ -384,7 +344,6 @@
         });
 
         function makeDexEntry(pokemon_id, aspect, forms) {
-            // Force pokemon_id to lowercase
             pokemon_id = pokemon_id.toLowerCase();
             const pokemon_id_aspect = `${pokemon_id}_${aspect}`;
             return {
@@ -403,41 +362,58 @@
         }
 
         function sanitizePokemonId(str) {
-            // Remove all non-alphanumeric characters (keep only a-z, 0-9)
-            // Also remove spaces and underscores at this stage if you want
-            // to keep underscores, replace [^a-z0-9_] with [^a-z0-9]
             return str.replace(/[^a-z0-9]/gi, '');
         }
 
         function parsePokemonIds(input) {
-            // Split by line breaks and commas, trim, force lowercase, filter out empty strings, and sanitize
             return input
                 .split(/[\n,]+/)
                 .map(s => sanitizePokemonId(s.trim().toLowerCase()))
                 .filter(Boolean);
         }
 
-        // Enforce lowercase and remove symbols/spaces as user types/pastes
+        // Dex File Generator: aspect mode toggle logic
         document.addEventListener('DOMContentLoaded', function() {
             const pokemonTextarea = document.getElementById('pokemon_ids');
-            pokemonTextarea.addEventListener('input', function() {
-                // Preserve caret position when changing value
-                const start = this.selectionStart;
-                const end = this.selectionEnd;
-                // Split by lines, clean each, and join again
-                let lines = this.value.split('\n').map(line =>
+            const dexEntriesTextarea = document.getElementById('dex_entries');
+            const aspectSingleRadio = document.getElementById('aspect_single_radio');
+            const aspectMultiRadio = document.getElementById('aspect_multi_radio');
+            const aspectSingleGroup = document.getElementById('aspect_single_group');
+            const aspectMultiGroup = document.getElementById('aspect_multi_group');
+
+            function cleanTextarea(textarea) {
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                let lines = textarea.value.split('\n').map(line =>
                     line
                         .toLowerCase()
                         .split(/,/g)
                         .map(part => sanitizePokemonId(part))
                         .join(',')
                 );
-                this.value = lines.join('\n');
-                this.setSelectionRange(start, end);
+                textarea.value = lines.join('\n');
+                textarea.setSelectionRange(start, end);
+            }
+            pokemonTextarea.addEventListener('input', function() {
+                cleanTextarea(pokemonTextarea);
             });
+            // Only sanitize on submit for dexEntriesTextarea to prevent unwanted clearing while typing
+
+            function updateAspectMode() {
+                if (aspectSingleRadio.checked) {
+                    aspectSingleGroup.style.display = '';
+                    aspectMultiGroup.style.display = 'none';
+                } else {
+                    aspectSingleGroup.style.display = 'none';
+                    aspectMultiGroup.style.display = '';
+                }
+            }
+            aspectSingleRadio.addEventListener('change', updateAspectMode);
+            aspectMultiRadio.addEventListener('change', updateAspectMode);
+
+            updateAspectMode();
         });
 
-        // Load JSZip library dynamically if needed
         function loadJSZip(callback) {
             if (window.JSZip) {
                 callback();
@@ -449,6 +425,7 @@
             document.head.appendChild(script);
         }
 
+        // DEX ENTRY GENERATOR
         document.getElementById('dexForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const pokemon_ids_input = document.getElementById('pokemon_ids').value;
@@ -483,7 +460,6 @@
                     const zip = new JSZip();
                     pokemonIds.forEach(pokemon_id => {
                         const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
-                        // Make sure filename is all lowercase
                         const filename = `${pokemon_id}_${aspect}`.toLowerCase() + `.json`;
                         zip.file(filename, JSON.stringify(dexEntry, null, 4));
                     });
@@ -502,7 +478,6 @@
             } else {
                 pokemonIds.forEach(pokemon_id => {
                     const dexEntry = makeDexEntry(pokemon_id, aspect, forms);
-                    // Make sure filename is all lowercase
                     const filename = `${pokemon_id}_${aspect}`.toLowerCase() + `.json`;
                     const blob = new Blob([JSON.stringify(dexEntry, null, 4)], {type: "application/json"});
                     const url = URL.createObjectURL(blob);
@@ -515,6 +490,132 @@
                     URL.revokeObjectURL(url);
                 });
             }
+        });
+
+        // DEX FILE GENERATOR (supports single and multi aspect)
+        document.getElementById('dexListForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const dex_id = document.getElementById('dex_id').value.trim().toLowerCase();
+            const sort_order = parseInt(document.getElementById('dex_sort_order').value.trim(), 10);
+            const dex_entries_input = document.getElementById('dex_entries').value;
+            const aspectSingleRadio = document.getElementById('aspect_single_radio');
+            const aspectMultiRadio = document.getElementById('aspect_multi_radio');
+            const dex_aspect = document.getElementById('dex_aspect').value.trim().toLowerCase();
+
+            if (!dex_id || isNaN(sort_order) || !dex_entries_input) {
+                alert("Please fill out all fields.");
+                return;
+            }
+
+            let entries = [];
+            let filename = "dex.json";
+            if (aspectSingleRadio.checked) {
+                if (!dex_aspect) {
+                    alert("Please provide an aspect for all Pokémon.");
+                    return;
+                }
+                // All entries use the same aspect
+                const pokemonNames = dex_entries_input
+                    .split(/[\n,]+/)
+                    .map(s => s.trim().toLowerCase())
+                    .filter(Boolean)
+                    .map(sanitizePokemonId);
+                if (pokemonNames.length === 0) {
+                    alert("Please enter at least one Pokémon Name or ID.");
+                    return;
+                }
+                entries = pokemonNames.map(name => `cobblemon:${name}_${dex_aspect}`);
+            } else {
+                // Each line must be "pokemon,aspect"
+                const pairs = dex_entries_input
+                    .split('\n')
+                    .map(line => line.trim())
+                    .filter(Boolean)
+                    .map(line => line.split(',').map(s => s.trim().toLowerCase()));
+                if (pairs.length === 0) {
+                    alert("Please enter at least one Pokémon/Aspect pair.");
+                    return;
+                }
+                let hasError = false;
+                entries = pairs.map(pair => {
+                    if (pair.length !== 2) {
+                        hasError = true;
+                        return null;
+                    }
+                    const pokemon = sanitizePokemonId(pair[0]);
+                    const aspect = sanitizePokemonId(pair[1]);
+                    if (!pokemon || !aspect) {
+                        hasError = true;
+                        return null;
+                    }
+                    return `cobblemon:${pokemon}_${aspect}`;
+                });
+                if (hasError) {
+                    alert("Each line must be in the format: pokemon,aspect (e.g. bulbasaur,skeletal)");
+                    return;
+                }
+            }
+
+            // Export filename: take everything after the last colon in the dex_id (e.g. frontier:halloween → halloween.json)
+            let safeDexId = dex_id;
+            if (safeDexId.includes(':')) {
+                safeDexId = safeDexId.split(':').pop();
+            }
+            safeDexId = safeDexId.replace(/[^a-z0-9]/gi, '');
+            filename = `${safeDexId}.json`;
+
+            const dexFile = {
+                type: "cobblemon:simple_pokedex_def",
+                id: dex_id,
+                sortOrder: sort_order,
+                entries: entries
+            };
+
+            const blob = new Blob([JSON.stringify(dexFile, null, 4)], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // SIMPLE DEX GENERATOR (third generator)
+        document.getElementById('simpleDexForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const dexId = document.getElementById('simple_dex_id').value.trim();
+            const entry = document.getElementById('simple_dex_entry').value.trim();
+
+            // Validate
+            if (!dexId || !entry) {
+                alert("Please fill out both Dex ID and Entry.");
+                return;
+            }
+            // Filename: take everything after last colon in dexId
+            let safeDexId = dexId;
+            if (safeDexId.includes(':')) {
+                safeDexId = safeDexId.split(':').pop();
+            }
+            safeDexId = safeDexId.replace(/[^a-z0-9]/gi, '');
+
+            const filename = `${safeDexId}.json`;
+
+            const json = {
+                dexId: dexId,
+                entries: [entry]
+            };
+
+            const blob = new Blob([JSON.stringify(json, null, 4)], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         });
     </script>
 </body>
