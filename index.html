@@ -402,22 +402,37 @@
             };
         }
 
+        function sanitizePokemonId(str) {
+            // Remove all non-alphanumeric characters (keep only a-z, 0-9)
+            // Also remove spaces and underscores at this stage if you want
+            // to keep underscores, replace [^a-z0-9_] with [^a-z0-9]
+            return str.replace(/[^a-z0-9]/gi, '');
+        }
+
         function parsePokemonIds(input) {
-            // Split by line breaks and commas, trim, force lowercase, and filter out empty strings
+            // Split by line breaks and commas, trim, force lowercase, filter out empty strings, and sanitize
             return input
                 .split(/[\n,]+/)
-                .map(s => s.trim().toLowerCase())
+                .map(s => sanitizePokemonId(s.trim().toLowerCase()))
                 .filter(Boolean);
         }
 
-        // Enforce lowercase in the textarea as user types/pastes
+        // Enforce lowercase and remove symbols/spaces as user types/pastes
         document.addEventListener('DOMContentLoaded', function() {
             const pokemonTextarea = document.getElementById('pokemon_ids');
             pokemonTextarea.addEventListener('input', function() {
                 // Preserve caret position when changing value
                 const start = this.selectionStart;
                 const end = this.selectionEnd;
-                this.value = this.value.toLowerCase();
+                // Split by lines, clean each, and join again
+                let lines = this.value.split('\n').map(line =>
+                    line
+                        .toLowerCase()
+                        .split(/,/g)
+                        .map(part => sanitizePokemonId(part))
+                        .join(',')
+                );
+                this.value = lines.join('\n');
                 this.setSelectionRange(start, end);
             });
         });
